@@ -6,28 +6,28 @@
     dest: "{{ user_data_dir }}/delta-themes.gitconfig"
 
 - name: Git | Install delta diff tool
-  package:
-    name: git-delta
+  ansible.builtin.apt:
+    deb: https://github.com/dandavison/delta/releases/download/0.15.1/git-delta_0.15.1_amd64.deb
     state: present
   become: true
 
 - name: Git | Create config dir
   file:
     path: "{{ user_config_dir }}/gitconfig"
-    owner: "{{ user.name }}"
-    group: "{{ user.group }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
     state: directory
 
 - name: Git | Install personal gitconfig
   template:
-    owner: "{{ user.name }}"
-    group: "{{ user.group }}"
-    src: templates/personal-gitconfig.j2
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+    src: roles/common/templates/gitconfig.j2
     dest: "{{ user_config_dir }}/gitconfig/personal"
 
-- name: Git | Install current work gitconfig
-  copy:
-    owner: "{{ user.name }}"
-    group: "{{ user.group }}"
-    src: files/current-work-gitconfig
-    dest: "{{ user_config_dir }}/gitconfig/work"
+# - name: Git | Install current work gitconfig
+#  copy:
+#    owner: "{{ ansible_user_id }}"
+#    group: "{{ ansible_user_gid }}"
+#    src: roles/common/files/current-work-gitconfig
+#    dest: "{{ user_config_dir }}/gitconfig/work"

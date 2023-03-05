@@ -1,0 +1,14 @@
+---
+- name: Set up environment
+  hosts: localhost
+  user: erk 
+  become: false
+
+  roles:
+    - role: common
+
+  tasks:
+    - ansible.builtin.set_fact:
+        user_config_dir: "{{ ansible_user_dir}}/.config"
+        user_data_dir: "{{ ansible_user_dir }}/.local/share"
+    - import_tasks: roles/common/tasks/git.yml
