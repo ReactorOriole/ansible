@@ -1,0 +1,33 @@
+# vim:ft=yaml.ansible:
+---
+- name: Git | Download delta themes
+  get_url:
+    url: https://raw.githubusercontent.com/dandavison/delta/master/themes.gitconfig
+    dest: "{{ user_data_dir }}/delta-themes.gitconfig"
+
+- name: Git | Install delta diff tool
+  package:
+    name: git-delta
+    state: present
+  become: true
+
+- name: Git | Create config dir
+  file:
+    path: "{{ user_config_dir }}/gitconfig"
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    state: directory
+
+- name: Git | Install personal gitconfig
+  template:
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    src: templates/personal-gitconfig.j2
+    dest: "{{ user_config_dir }}/gitconfig/personal"
+
+- name: Git | Install current work gitconfig
+  copy:
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    src: files/current-work-gitconfig
+    dest: "{{ user_config_dir }}/gitconfig/work"
